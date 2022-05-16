@@ -78,7 +78,7 @@ This figure is no longer in use. This is the original Figure 1, which has since 
 
 
     
-![png](main_files/main_7_1.png)
+![png](figures/figure1-v1.png)
     
 
 
