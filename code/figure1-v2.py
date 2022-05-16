@@ -45,8 +45,8 @@ txt2 = ax.text(xpos,ypos_knees,"Knees",color='firebrick',fontweight="bold",zorde
 ax.set_xlim(0,1.25)
 ax.set_ylim(-.75,1.6)
 bin_ticks=[-.5,0,0.25,0.5,0.75,1,1.5]
-ax0.set_yticks(ticks=bin_ticks)
-ax0.set_yticklabels(list(map(str, [round(val,2) for val in bin_ticks])))#['1','2','3','4','5','6','7','8'])
+ax.set_yticks(ticks=bin_ticks)
+ax.set_yticklabels(list(map(str, [round(val,2) for val in bin_ticks])))#['1','2','3','4','5','6','7','8'])
 ax.tick_params(axis='y')#,direction='out')
 ax.set_ylabel(None)
 ax.xaxis.set_visible(False)
@@ -54,7 +54,7 @@ ax.spines['bottom'].set_visible(False)
 ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
 
-plt.savefig("greinke_priorposition.svg")
+plt.savefig(os.path.join(os.getcwd(),"figures","greinke_priorposition.svg"))
 
 
 #########################################
@@ -205,7 +205,7 @@ ax.spines['bottom'].set_visible(False)
 ax.spines['top'].set_visible(False)
 ax.spines['right'].set_visible(False)
 
-plt.savefig("greinke_likelihoodposition.svg")
+plt.savefig(os.path.join(os.getcwd(),"figures","greinke_likelihoodposition.svg"))
 
 
 #########################################
@@ -335,8 +335,8 @@ ax1.yaxis.set_major_formatter(StrMethodFormatter('{x:,.1f}'))
 ax2.yaxis.set_major_formatter(StrMethodFormatter('{x:,.1f}'))
 
 plt.show()
-fig.savefig("bayes-greinke.png", dpi=300, facecolor='w', edgecolor='w', bbox_inches="tight")
-fig.savefig("bayes-greinke.svg")
+fig.savefig(os.path.join(os.getcwd(),"figures","bayes-greinke.png"), dpi=300, facecolor='w', edgecolor='w', bbox_inches="tight")
+fig.savefig(os.path.join(os.getcwd(),"figures","bayes-greinke.svg"))
 
 
 #########################################
@@ -399,7 +399,7 @@ ax1.legend(loc="upper center",frameon=False,ncol=2,fontsize=9,bbox_to_anchor=(.7
 ax1.set_xlim(1.15,-.15)
 
 # plt.tight_layout()
-fig.savefig("bayes_to_error.svg", bbox_inches="tight")
+fig.savefig(os.path.join(os.getcwd(),"figures","bayes_to_error.svg"), bbox_inches="tight")
 
 
 #########################################
@@ -428,5 +428,5 @@ ax.invert_xaxis()
 ax.set_xlabel([])
 # ax.set_frame_on(False)
 plt.show()
-fig.savefig("vertical_contact_error_distribution.svg")
+fig.savefig(os.path.join(os.getcwd(),"figures","vertical_contact_error_distribution.svg"))
 
