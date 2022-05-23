@@ -6,7 +6,22 @@
 
 # The v2 figure 1 is made in inkscape, but the data figures are made here
 
-greinke = data[data.player_name.isin(["Greinke, Zack"])]
+# Pitches and order
+pitches = ["Sinker","Cutter","4-Seam Fastball","Slider","Curveball","Changeup"]    
+markers = ["X","o","*","s","^","P"]#["o","o"ax_top_L.spines['bottom'].set_color(tuple(3*[0.2])),"o","o","o","o"]#,"D"]#,"v"]    
+cmap =  "colorblind"#"viridis"#
+greinke_colors = []
+for row in sns.color_palette(cmap,as_cmap=False,n_colors=len(pitches)): #frequent_pitches.index)):
+    greinke_colors.append([*row,1.])    
+order = pd.DataFrame({"pitch": [], "colormap": [], "color": [], "marker": []})
+for (pitch,mrkr,this_clr) in zip(pitches,markers,greinke_colors):   
+    order = pd.concat([order,pd.DataFrame({"pitch": pitch, "color": [this_clr],"marker": mrkr, "code": pitch_type_codes[pitch]})],ignore_index=True, axis=0)
+
+# order = make_color_order(graded=False,cmap="viridis")
+order.reset_index(inplace=True)
+
+
+greinke = data[data.player_name.isin(["Greinke, Zack"])].copy()
 
 # greinke["release_spin_rate"] = greinke["release_spin_rate"].fillna(0)
 greinke.loc[:,"release_speed_float"] = greinke.release_speed.astype("float64")
@@ -20,6 +35,23 @@ greinke.loc[:,"plate_z_float"] = greinke.plate_z.astype("float64")
 
 greinke.loc[:,"plate_x_norm"] = np.array((greinke.plate_x - (-0.71)) / (0.71 - (-0.71)),dtype="float")
 greinke.loc[:,"plate_z_norm"] = np.array((greinke.plate_z - greinke.sz_bot) / (greinke.sz_top - greinke.sz_bot), dtype="float")
+
+
+
+# greinke = data[data.player_name.isin(["Greinke, Zack"])].copy()
+
+# # greinke["release_spin_rate"] = greinke["release_spin_rate"].fillna(0)
+# greinke.loc[:,"release_speed_float"] = greinke.release_speed.astype("float64")
+# greinke.loc[:,"release_spin_float"] = greinke.release_spin_rate.astype("float64")
+# greinke.loc[:,"release_pos_x_float"] = greinke.release_pos_x.astype("float64")
+# greinke.loc[:,"release_pos_z_float"] = greinke.release_pos_z.astype("float64")
+# greinke.loc[:,"pfx_x_float"] = greinke.pfx_x.astype("float64")
+# greinke.loc[:,"pfx_z_float"] = greinke.pfx_z.astype("float64")
+# greinke.loc[:,"plate_x_float"] = greinke.plate_x.astype("float64")
+# greinke.loc[:,"plate_z_float"] = greinke.plate_z.astype("float64")
+
+# greinke.loc[:,"plate_x_norm"] = np.array((greinke.plate_x - (-0.71)) / (0.71 - (-0.71)),dtype="float")
+# greinke.loc[:,"plate_z_norm"] = np.array((greinke.plate_z - greinke.sz_bot) / (greinke.sz_top - greinke.sz_bot), dtype="float")
 
 #########################################
 #                                       #
@@ -63,19 +95,19 @@ plt.savefig(os.path.join(os.getcwd(),"figures","greinke_priorposition.svg"))
 #                                       #
 #########################################
 
-# Pitches and order
-pitches = ["Sinker","Cutter","4-Seam Fastball","Slider","Curveball","Changeup"]    
-markers = ["X","o","*","s","^","P"]#["o","o"ax_top_L.spines['bottom'].set_color(tuple(3*[0.2])),"o","o","o","o"]#,"D"]#,"v"]    
-cmap =  "colorblind"#"viridis"#
-greinke_colors = []
-for row in sns.color_palette(cmap,as_cmap=False,n_colors=len(pitches)): #frequent_pitches.index)):
-    greinke_colors.append([*row,1.])    
-order = pd.DataFrame({"pitch": [], "colormap": [], "color": [], "marker": []})
-for (pitch,mrkr,this_clr) in zip(pitches,markers,greinke_colors):   
-    order = pd.concat([order,pd.DataFrame({"pitch": pitch, "color": [this_clr],"marker": mrkr, "code": pitch_type_codes[pitch]})],ignore_index=True, axis=0)
+# # Pitches and order
+# pitches = ["Sinker","Cutter","4-Seam Fastball","Slider","Curveball","Changeup"]    
+# markers = ["X","o","*","s","^","P"]#["o","o"ax_top_L.spines['bottom'].set_color(tuple(3*[0.2])),"o","o","o","o"]#,"D"]#,"v"]    
+# cmap =  "colorblind"#"viridis"#
+# greinke_colors = []
+# for row in sns.color_palette(cmap,as_cmap=False,n_colors=len(pitches)): #frequent_pitches.index)):
+#     greinke_colors.append([*row,1.])    
+# order = pd.DataFrame({"pitch": [], "colormap": [], "color": [], "marker": []})
+# for (pitch,mrkr,this_clr) in zip(pitches,markers,greinke_colors):   
+#     order = pd.concat([order,pd.DataFrame({"pitch": pitch, "color": [this_clr],"marker": mrkr, "code": pitch_type_codes[pitch]})],ignore_index=True, axis=0)
 
-# order = make_color_order(graded=False,cmap="viridis")
-order.reset_index(inplace=True)
+# # order = make_color_order(graded=False,cmap="viridis")
+# order.reset_index(inplace=True)
 
 # Define figure
 fig = plt.figure(figsize=(2.75,2.15))
@@ -196,8 +228,8 @@ txt2 = ax.text(xpos,ypos_knees,"Knees",color='firebrick',fontweight="bold",zorde
 # Make figure adjustments
 ax.set_ylim(-.75,1.6)
 bin_ticks=[-.5,0,0.25,0.5,0.75,1,1.5]
-ax0.set_yticks(ticks=bin_ticks)
-ax0.set_yticklabels(list(map(str, [round(val,2) for val in bin_ticks])))#['1','2','3','4','5','6','7','8'])
+ax.set_yticks(ticks=bin_ticks)
+ax.set_yticklabels(list(map(str, [round(val,2) for val in bin_ticks])))#['1','2','3','4','5','6','7','8'])
 ax.tick_params(axis='y')#,direction='out')
 ax.set_ylabel(None)
 ax.xaxis.set_visible(False)
@@ -430,3 +462,329 @@ ax.set_xlabel([])
 plt.show()
 fig.savefig(os.path.join(os.getcwd(),"figures","vertical_contact_error_distribution.svg"))
 
+#########################################
+#                                       #
+#       Make full bayes for batter      #
+#                                       #
+#########################################
+
+# Get pdf for greinke data - aka prior
+mean,std=stats.norm.fit(greinke.plate_z_norm)
+X= np.linspace(-.5, 1.5, 100)
+greinke_prior = stats.norm.pdf(X, mean, std)
+
+# Get likelihood
+likelihood = stats.norm.pdf(X, 0.35, 0.1)
+
+# Get posterior
+posterior = np.multiply(greinke_prior,likelihood)
+
+# Make figure
+fig = plt.figure(figsize=(1.5,4))
+ax = fig.add_subplot()
+ax.plot(greinke_prior,X,color="dodgerblue",zorder=2,label="Prior")
+# ax.fill_between(greinke_prior,X,color="dodgerblue",zorder=2,alpha=0.2)
+ax.plot(likelihood,X,color=(0.5,0.5,0.5),zorder=3,label="Likelihood")
+# ax.fill_between(likelihood,X,color=(0.5,0.5,0.5),zorder=3,alpha=0.2)
+ax.plot(posterior,X,color=order[order.pitch.isin(["Curveball"])].color.tolist()[0],zorder=4,label="Posterior")
+# ax.fill_between(posterior,X,color=order[order.pitch.isin(["Curveball"])].color.tolist()[0],zorder=4,alpha=0.2)
+ax.scatter(posterior.max(),X[posterior.argmax()],s=50,color=order[order.pitch.isin(["4-Seam Fastball"])].color.tolist()[0],zorder=5,marker="*",label="Estimate")
+
+# Make figure adjustments
+ax.set_ylim(-.5,1.5)
+bin_ticks=[-.5,0,0.25,0.5,0.75,1,1.5]
+ax.set_yticks([])#ticks=bin_ticks)
+# ax.set_yticklabels(list(map(str, [round(val,2) for val in bin_ticks])))#['1','2','3','4','5','6','7','8'])
+ax.tick_params(axis='y')#,direction='out')
+ax.set_ylabel(None)
+ax.xaxis.set_visible(False)
+ax.spines['bottom'].set_visible(False)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.legend()
+
+fig.savefig(os.path.join(os.getcwd(),"figures","Figure1-v2-GreinkePriorLikelihoodPosterior.svg"))
+
+#########################################
+#                                       #
+#           Make P(z| pitch)            #
+#                                       #
+#########################################
+
+# Make figure
+fig = plt.figure(figsize=(1,3.5))
+ax = fig.add_subplot()
+
+for pitch in pitches:
+    # Get pdf for greinke data - aka prior
+    mean,std=stats.norm.fit(greinke.loc[greinke.pitch_name.isin([pitch]),"plate_z_norm"])
+    X= np.linspace(-.5, 1.5, 100)
+    prior = stats.norm.pdf(X, mean, std)
+    ax.plot(prior,X,color=order.loc[order.pitch.isin([pitch]),"color"].tolist()[0],label="Prior")
+
+# Make figure adjustments
+ax.set_ylim(-.5,1.5)
+ax.set_yticks([0,1])
+ax.set_yticklabels([])
+ax.tick_params(axis='y')
+ax.set_ylabel(None)
+ax.xaxis.set_visible(False)
+ax.spines['bottom'].set_visible(False)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+
+fig.savefig(os.path.join(os.getcwd(),"figures","Figure1-v3-PlatePositionByPitch.svg"))
+
+#########################################
+#                                       #
+#             Make P(z|velo)            #
+#                                       #
+#########################################
+
+# Make figure
+fig = plt.figure(figsize=(1,3.5))
+ax = fig.add_subplot()
+
+greinke.dropna(subset=['release_speed'],inplace=True)
+greinke.loc[:,'release_speed_binned'] = pd.cut(greinke['release_speed'].astype("float"),bins=[greinke.release_speed.min(),80,greinke.release_speed.max()])
+
+bin_labels = list(map(str, range(1,4))) #['1','2','3','4','5','6','7','8','9']
+velo_qbinned , velo_qbins = pd.qcut(greinke['release_speed'].astype("float"),q=len(bin_labels), labels=bin_labels,retbins=True)
+greinke.loc[:,'release_speed_qbinned'] = velo_qbinned
+
+clrs = ['black','darkgrey','grey']
+# for cnt,(bin,clr,lnstyle) in enumerate(zip(greinke.loc[:,'release_speed_binned'].unique(),['black','grey'],['-',':'])):
+for cnt,(bin,clr,lnstyle) in enumerate(zip(bin_labels,['black','grey','darkgrey'],['-',':','--'])):
+    # Get pdf for greinke data - aka prior
+    mean,std=stats.norm.fit(greinke.loc[greinke.release_speed_qbinned == bin,'plate_z_norm'])
+    X= np.linspace(-.5, 1.5, 100)
+    prior = stats.norm.pdf(X, mean, std)
+    ax.plot(prior,X,color=clr,linestyle=lnstyle,label="{}-{} mph".format(velo_qbins[cnt],velo_qbins[cnt+1]))
+
+# Make figure adjustments
+ax.set_ylim(-.5,1.5)
+ax.set_yticks([0,1])
+ax.set_yticklabels([])
+ax.tick_params(axis='y')
+ax.set_ylabel(None)
+ax.xaxis.set_visible(False)
+ax.spines['bottom'].set_visible(False)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.legend()
+
+fig.savefig(os.path.join(os.getcwd(),"figures","Figure1-v3-PlatePositionByVelo.svg"))
+
+
+#########################################
+#                                       #
+#              Make P(z|spin)           #
+#                                       #
+#########################################
+
+# Make figure
+fig = plt.figure(figsize=(1,3.5))
+ax = fig.add_subplot()
+
+greinke.dropna(subset=['spin_axis'],inplace=True)
+
+
+# spin_cutbins = [0,150,360]
+# greinke.loc[:,'spin_axis_binned'] = pd.cut(greinke['spin_axis'].astype("float"),bins=spin_cutbins)
+
+# clrs = ['black','darkgrey','grey']
+# for cnt,(bin,clr,lnstyle) in enumerate(zip(greinke.loc[:,'spin_axis_binned'].unique(),['black','grey'],['-',':'])):
+#     # Get pdf for greinke data - aka prior
+#     mean,std=stats.norm.fit(greinke.loc[greinke.spin_axis_binned == bin,'plate_z_norm'])
+#     X= np.linspace(-.5, 1.5, 100)
+#     prior = stats.norm.pdf(X, mean, std)
+#     ax.plot(prior,X,color=clr,linestyle=lnstyle,label="{}-{} rpm".format(spin_cutbins[cnt],spin_cutbins[cnt+1]))
+
+
+bin_labels = list(map(str, range(1,4))) #['1','2','3','4','5','6','7','8','9']
+spin_qbinned , spin_qbins = pd.qcut(greinke['spin_axis'].astype("float"),q=len(bin_labels), labels=bin_labels,retbins=True)
+greinke.loc[:,'spin_axis_qbinned'] = spin_qbinned
+
+clrs = ['black','darkgrey','grey']
+# for cnt,(bin,clr,lnstyle) in enumerate(zip(greinke.loc[:,'spin_axis_binned'].unique(),['black','grey'],['-',':'])):
+for cnt,(bin,clr,lnstyle) in enumerate(zip(bin_labels,['black','grey','lightgrey'],['-','--',':'])):
+    # Get pdf for greinke data - aka prior
+    mean,std=stats.norm.fit(greinke.loc[greinke.spin_axis_qbinned == bin,'plate_z_norm'])
+    X= np.linspace(-.5, 1.5, 100)
+    prior = stats.norm.pdf(X, mean, std)
+    ax.plot(prior,X,color=clr,linestyle=lnstyle,label="{}-{}".format(spin_qbins[cnt],spin_qbins[cnt+1]))
+
+# Make figure adjustments
+ax.set_ylim(-.5,1.5)
+ax.set_yticks([0,1])
+ax.set_yticklabels([])
+ax.tick_params(axis='y')
+ax.set_ylabel(None)
+ax.xaxis.set_visible(False)
+ax.spines['bottom'].set_visible(False)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.legend()
+
+fig.savefig(os.path.join(os.getcwd(),"figures","Figure1-v3-PlatePositionBySpinAxis.svg"))
+
+
+
+#################
+#               #
+#   Spin Rate   #
+#               #
+#################
+
+# Make figure
+fig = plt.figure(figsize=(1,3.5))
+ax = fig.add_subplot()
+
+greinke.dropna(subset=['release_spin_rate'],inplace=True)
+
+bin_labels = list(map(str, range(1,4))) #['1','2','3','4','5','6','7','8','9']
+spinrate_qbinned , spinrate_qbins = pd.qcut(greinke['release_spin_rate'].astype("float"),q=len(bin_labels), labels=bin_labels,retbins=True)
+greinke.loc[:,'release_spin_rate_qbinned'] = spinrate_qbinned
+
+clrs = ['black','darkgrey','grey']
+# for cnt,(bin,clr,lnstyle) in enumerate(zip(greinke.loc[:,'spin_axis_binned'].unique(),['black','grey'],['-',':'])):
+for cnt,(bin,clr,lnstyle) in enumerate(zip(bin_labels,['black','grey','lightgrey'],['-','--',':'])):
+    # Get pdf for greinke data - aka prior
+    mean,std=stats.norm.fit(greinke.loc[greinke.release_spin_rate_qbinned == bin,'plate_z_norm'])
+    X= np.linspace(-.5, 1.5, 100)
+    prior = stats.norm.pdf(X, mean, std)
+    ax.plot(prior,X,color=clr,linestyle=lnstyle,label="{}-{} rpm".format(spinrate_qbins[cnt],spinrate_qbins[cnt+1]))
+
+# Make figure adjustments
+ax.set_ylim(-.5,1.5)
+ax.set_yticks([0,1])
+ax.set_yticklabels([])
+ax.tick_params(axis='y')
+ax.set_ylabel(None)
+ax.xaxis.set_visible(False)
+ax.spines['bottom'].set_visible(False)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.legend()
+
+fig.savefig(os.path.join(os.getcwd(),"figures","Figure1-v3-PlatePositionBySpinRate.svg"))
+
+
+#########################
+#                       #
+#   Vertical Movement   #
+#                       #
+#########################
+
+# Make figure
+fig = plt.figure(figsize=(1,3.5))
+ax = fig.add_subplot()
+
+greinke.dropna(subset=['pfx_z_float'],inplace=True)
+
+# pfxz_cutbins = [greinke['pfx_z_float'].min(), 0 , greinke['pfx_z_float'].max()]
+# greinke.loc[:,'pfx_z_binned'] = pd.cut(greinke['pfx_z_float'].astype("float"),bins=pfxz_cutbins)
+
+# clrs = ['black','darkgrey']
+# for cnt,(bin,clr,lnstyle) in enumerate(zip(greinke.loc[:,'pfx_z_binned'].unique(),['black','grey'],['-',':'])):
+#     # Get pdf for greinke data - aka prior
+#     mean,std=stats.norm.fit(greinke.loc[greinke.pfx_z_binned == bin,'plate_z_norm'])
+#     X= np.linspace(-.5, 1.5, 100)
+#     prior = stats.norm.pdf(X, mean, std)
+#     ax.plot(prior,X,color=clr,linestyle=lnstyle,label="{}-{} inches".format(pfxz_cutbins[cnt],pfxz_cutbins[cnt+1]))
+
+bin_labels = list(map(str, range(1,4))) #['1','2','3','4','5','6','7','8','9']
+pfxz_qbinned , pfxz_qbins = pd.qcut(greinke['pfx_z_float'].astype("float"),q=len(bin_labels), labels=bin_labels,retbins=True)
+greinke.loc[:,'pfx_z_qbinned'] = pfxz_qbinned
+
+clrs = ['black','darkgrey','grey']
+# for cnt,(bin,clr,lnstyle) in enumerate(zip(greinke.loc[:,'spin_axis_binned'].unique(),['black','grey'],['-',':'])):
+for cnt,(bin,clr,lnstyle) in enumerate(zip(bin_labels,['black','grey','lightgrey'],['-','--',':'])):
+    # Get pdf for greinke data - aka prior
+    mean,std=stats.norm.fit(greinke.loc[greinke.pfx_z_qbinned == bin,'plate_z_norm'])
+    X= np.linspace(-.5, 1.5, 100)
+    prior = stats.norm.pdf(X, mean, std)
+    ax.plot(prior,X,color=clr,linestyle=lnstyle,label="{}-{} inches".format(pfxz_qbins[cnt],pfxz_qbins[cnt+1]))
+
+# Make figure adjustments
+ax.set_ylim(-.5,1.5)
+ax.set_yticks([0,1])
+ax.set_yticklabels([])
+ax.tick_params(axis='y')
+ax.set_ylabel(None)
+ax.xaxis.set_visible(False)
+ax.spines['bottom'].set_visible(False)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.legend()
+
+fig.savefig(os.path.join(os.getcwd(),"figures","Figure1-v3-PlatePositionByVerticalMovement.svg"))
+
+
+
+#########################
+#                       #
+#   Vertical Movement   #
+#                       #
+#########################
+
+# Make figure
+fig = plt.figure(figsize=(1,3.5))
+ax = fig.add_subplot()
+
+greinke.loc[:,"vertical_drop"] = greinke.loc[:,"release_pos_z_float"] - greinke.loc[:,"plate_z"]
+greinke.dropna(subset=['vertical_drop'],inplace=True)
+
+# vdrop_cutbins = [greinke['vertical_drop'].min(), 0 , greinke['pfx_z_float'].max()]
+# greinke.loc[:,'pfx_z_binned'] = pd.cut(greinke['pfx_z_float'].astype("float"),bins=pfxz_cutbins)
+
+# clrs = ['black','darkgrey']
+# for cnt,(bin,clr,lnstyle) in enumerate(zip(greinke.loc[:,'pfx_z_binned'].unique(),['black','grey'],['-',':'])):
+#     # Get pdf for greinke data - aka prior
+#     mean,std=stats.norm.fit(greinke.loc[greinke.pfx_z_binned == bin,'plate_z_norm'])
+#     X= np.linspace(-.5, 1.5, 100)
+#     prior = stats.norm.pdf(X, mean, std)
+#     ax.plot(prior,X,color=clr,linestyle=lnstyle,label="{}-{} inches".format(pfxz_cutbins[cnt],pfxz_cutbins[cnt+1]))
+
+bin_labels = list(map(str, range(1,5))) #['1','2','3','4','5','6','7','8','9']
+vdrop_qbinned , vdrop_qbins = pd.qcut(greinke['vertical_drop'].astype("float"),q=len(bin_labels), labels=bin_labels,retbins=True)
+greinke.loc[:,'vertical_drop_qbinned'] = vdrop_qbinned
+
+clrs = ['black','darkgrey','grey']
+# for cnt,(bin,clr,lnstyle) in enumerate(zip(greinke.loc[:,'spin_axis_binned'].unique(),['black','grey'],['-',':'])):
+for cnt,(bin,clr,lnstyle) in enumerate(zip(bin_labels,['black','grey','lightgrey','darkgrey'],['-','--',':','-.'])):
+    # Get pdf for greinke data - aka prior
+    mean,std=stats.norm.fit(greinke.loc[greinke.vertical_drop_qbinned == bin,'plate_z_norm'])
+    X= np.linspace(-.5, 1.5, 100)
+    prior = stats.norm.pdf(X, mean, std)
+    ax.plot(prior,X,color=clr,linestyle=lnstyle,label="{}-{} ft".format(round(vdrop_qbins[cnt],1),round(vdrop_qbins[cnt+1],1)))
+
+# Make figure adjustments
+ax.set_ylim(-.5,1.5)
+ax.set_yticks([0,1])
+ax.set_yticklabels([])
+ax.tick_params(axis='y')
+ax.set_ylabel(None)
+ax.xaxis.set_visible(False)
+ax.spines['bottom'].set_visible(False)
+ax.spines['top'].set_visible(False)
+ax.spines['right'].set_visible(False)
+ax.legend()
+
+fig.savefig(os.path.join(os.getcwd(),"figures","Figure1-v3-PlatePositionByVerticalDrop.svg"))
+
+#########################################
+#                                       #
+#      Make scatter of spin vs velo     #
+#                                       #
+#########################################
+
+fig = plt.figure(figsize=(2,1))
+ax = fig.add_subplot()
+ss = sns.scatterplot(data=greinke.loc[greinke.pitch_name.isin(pitches),:],y='release_speed_float', x='spin_axis',hue="pitch_name",hue_order=order.pitch.tolist(),palette=order.color.tolist(),legend=False,size=2,linewidth=.1)
+ax.set_xlabel("Spin axis (deg)")
+ax.set_ylabel("Release velocity (mph)")
+plt.rcParams.update({'font.sans-serif':'Arial','font.size':8})
+ax.set_yticks([60,70,80,90])
+ax.set_ylim([55,100])
+fig.savefig(os.path.join(os.getcwd(),"figures","Figure1-v3-SpinAxisVsVelocity.svg"))
