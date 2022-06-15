@@ -5,8 +5,8 @@
 ########################################################################
 
 # Define figure
-fig = plt.figure(figsize=(7,4))
-
+fig = plt.figure(figsize=(7,2.5))
+plt.rcParams.update({'font.sans-serif':'Arial','font.size':9})
 # Add first gridspec for violinplot
 gs1 = fig.add_gridspec(nrows=1, ncols=1, left=0.05, right=0.45, bottom=0.05,top=0.9)
 ax1 = fig.add_subplot(gs1[0])
@@ -27,9 +27,9 @@ cmap = cm.get_cmap('plasma')
 # define_colors = [colors.to_rgba("firebrick"), colors.to_rgba("mediumseagreen")]#[cmap(0.8), cmap(0.5)]#, cmap(0.2)]
 define_colors = [cmap(0.8), cmap(0.5)]#, cmap(0.2)]
 
-these_colors = []
-for row in sns.color_palette(cmap_all,as_cmap=False,n_colors=len(which_pitches)): #frequent_pitches.index)):
-    these_colors.append([*row,1.])
+these_colors = len(which_pitches)*[(0.5,0.5,0.5,1)] + define_colors#[]
+# for row in sns.color_palette(cmap_all,as_cmap=False,n_colors=len(which_pitches)): #frequent_pitches.index)):
+#     these_colors.append([*row,1.])
 markers = ["X","^","*","s","o","P","D"]
 
 ##################################################
@@ -156,9 +156,10 @@ ax3.set_ylabel("Bias",fontweight="bold")
 ax3.tick_params(axis="x",length=0)
 ax3.set_ylim(0,0.025)
 
-ax1.text(1.90,.175,"A.",fontweight="bold",fontsize=16)
-ax1.text(-.75,.175,"B.",fontweight="bold",fontsize=16)
-ax1.text(-.75,0.04,"C.",fontweight="bold",fontsize=16)
+# ax1.text(1.90,.175,"A.",fontweight="bold",fontsize=16)
+# ax1.text(-.75,.175,"B.",fontweight="bold",fontsize=16)
+# ax1.text(-.75,0.04,"C.",fontweight="bold",fontsize=16)
 
 # plt.tight_layout()
 fig.savefig(os.path.join(os.getcwd(),"figures","Figure3-KnuckleballAndEephus.png"), dpi=300, facecolor='w', edgecolor='w',bbox_inches="tight")
+fig.savefig(os.path.join(os.getcwd(),"figures","Figure3-KnuckleballAndEephus.svg"))

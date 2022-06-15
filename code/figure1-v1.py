@@ -276,5 +276,5 @@ ax[9].set_title("Final Position",color=dark_grey,fontweight="bold",fontsize=9)
 plt.rcParams.update({'font.sans-serif':'Arial'})
 
 # Save figure
-fig.savefig(os.path.join(os.getcwd(),"figures","Figure1-pitchbehavior-viridis.png"), dpi=300, facecolor='w', edgecolor='w', bbox_inches="tight")
+fig.savefig(os.path.join(os.getcwd(),"figures","Figure1-V1","Figure1-pitchbehavior-viridis.png"), dpi=300, facecolor='w', edgecolor='w', bbox_inches="tight")
 

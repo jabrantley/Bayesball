@@ -44,6 +44,7 @@ data['release_pos_z'] = data['release_pos_z'].astype(float)
 data.loc[:,"pfx_z"] = data.loc[:,"pfx_z"].astype("float")
 data.loc[:,"pfx_x"] = data.loc[:,"pfx_x"].astype("float")
 data.dropna(subset=['release_pos_x','release_pos_z','pfx_x','pfx_z'],inplace=True)
+# data.loc[:,"pfx_z"] = data.pfx_z.fillna(100).astype("float")
 data.loc[:,"pfx_z_inches"] = data.loc[:,"pfx_z"].astype("float")*12
 data.loc[:,"pfx_z_norm"] = np.array((data.loc[:,'pfx_z'])/(data.loc[:,'sz_top'] - data.loc[:,'sz_bot']),dtype="float")
 
@@ -51,7 +52,7 @@ data.loc[:,"pfx_z_norm"] = np.array((data.loc[:,'pfx_z'])/(data.loc[:,'sz_top'] 
 plate_x_left, plate_x_right = -0.71, 0.71
 data.dropna(subset=['plate_x'],inplace=True)
 data.loc[:,'plate_x_norm'] = np.array((.25-(-.25))*((data.loc[:,'plate_x']-plate_x_left)/ (plate_x_right - plate_x_left))+(-.25),dtype="float")
-# data.loc[:,'plate_x_norm'] = np.array((data.loc[:,'plate_x']-plate_x_left)/ (plate_x_right - plate_x_left),dtype="float")
+data.loc[:,'plate_x_norm'] = np.array((data.loc[:,'plate_x']-plate_x_left)/ (plate_x_right - plate_x_left),dtype="float")
 
 #########################################################################
 #                                                                       #

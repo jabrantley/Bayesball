@@ -5,6 +5,9 @@
 ########################################################################
 
 # Define colors
+# from cv2 import rotate
+
+
 regression_color = "dodgerblue"
 
 cmap =  "viridis"#"plasma"#"crest"#"colorblind"
@@ -25,6 +28,7 @@ bin_ticks_labels.extend(['0','1'])
 # Define figures using gridspec
 fig = plt.figure(constrained_layout=False)
 fig.set_size_inches(7.5,8)
+plt.rcParams.update({'font.sans-serif':'Arial','font.size':10})
 
 ###########################################
 #                                         #
@@ -91,13 +95,14 @@ txt2 = ax2.text(xpos,ypos_knees,"Knees",color='firebrick',fontweight="bold",zord
 # Make figure adjustments
 ax2.set_xlim(0,1.25)
 ax2.set_ylim(-.75,1.6)
-ax2.set_yticks(ticks=bin_ticks)
-ax2.set_yticklabels(bin_ticks_labels)#['1','2','3','4','5','6','7','8'])
-ax2.tick_params(axis='y')#,direction='out')
-ax2.set_ylabel(None)
+ax2.set_yticks(ticks=[0,.5,1])
+# ax2.set_yticklabels(['0','50','100'])#bin_ticks_labels)#['1','2','3','4','5','6','7','8'])
+# ax2.tick_params(axis='y')#,direction='out')
 ax2.xaxis.set_visible(False)
 ax2.spines['bottom'].set_visible(False)
-ax2.set_ylabel("% Strikezone",fontweight='bold')
+ax2.set_ylabel(None)
+ax2.text(-1.1,0.45,"% Strikezone",fontweight='bold',va="center",rotation="vertical")
+ax2.text(0,-1,"Home plate",fontsize=10,fontweight="bold",ha="center")
 ax2.set_title("Vertical Pitch Position \n In Strike Zone", fontsize=10, fontweight='bold',y=1.02,x=-1)
 
 ##############################
@@ -129,7 +134,7 @@ my_violinplot(local_data=data,
 reg = ax3.plot(extended_xvals,extended_yvals,lw=2.5,color=regression_color,label="All Pitches")#,zorder=3)
 
 # Add labels
-ax3.set_xlim([-.5,1.5])
+ax3.set_xlim([-.7,1.7])
 plt.gca().invert_xaxis()
 ax3.set_xticks([0,0.5,1])
 ax3.set_ylim([-.075,0.2])
@@ -220,10 +225,9 @@ ax7.add_patch(Rectangle((-0.55,-0.001),width=0.25,height=-0.04, zorder=3,facecol
 ax2.text(-5.5,1.75,"A.",fontweight="bold",fontsize=16)
 ax2.text(3.,1.75,"B.",fontweight="bold",fontsize=16)
 ax2.text(-5.5,-1.25,"C.",fontweight="bold",fontsize=16)
-ax2.text(3.,-1.25,"D.",fontweight="bold",fontsize=16)
-ax2.text(3.,-2.35,"E.",fontweight="bold",fontsize=16)
+ax2.text(3.,-1.45,"D.",fontweight="bold",fontsize=16)
+ax2.text(3.,-3.15,"E.",fontweight="bold",fontsize=16)
 ax2.plot((-1,1),(-0.8,-0.8),'k-',linewidth=2.5,clip_on=False)
-ax2.text(0,-.9,"Home plate",fontsize=10,ha="center")
 ax2.add_patch(Rectangle((-1,0),width=2,height=1, zorder=1,fill=False,facecolor=None,edgecolor="lightgrey",clip_on=False))
 
 # Save figure

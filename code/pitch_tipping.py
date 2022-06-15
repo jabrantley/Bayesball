@@ -15,7 +15,8 @@ tg_alds = data[data.game_date.isin(["2019-10-10"]) & data.player_name.isin(["Gla
 ###########################################
 
 # Define figure
-fig = plt.figure(figsize=(7,5))
+fig = plt.figure(figsize=(7.5,2.85))
+plt.rcParams.update({'font.sans-serif':'Arial','font.size':9})
 
 # Add first gridspec for left and middle axes
 gs0 = fig.add_gridspec(nrows=1, ncols=2, left=0.001, right=0.3,bottom=.01,top=0.95, wspace=0)
@@ -26,7 +27,7 @@ gs1 = fig.add_gridspec(nrows=1, ncols=1, left=0.425, right=0.99,top=.95, wspace=
 ax1 = fig.add_subplot(gs1[0])
 
 # Add second gridspec for right axis
-gs2 = fig.add_gridspec(nrows=2, ncols=1, height_ratios=[1,2], left=0.5, bottom=.75, top=.935, right=0.95,hspace=0.15)
+gs2 = fig.add_gridspec(nrows=2, ncols=1, height_ratios=[1,2], left=0.5, bottom=.65, top=.935, right=0.95,hspace=0.15)
 ax2 = fig.add_subplot(gs2[0])
 ax3 = fig.add_subplot(gs2[1])
 
@@ -123,11 +124,11 @@ ax1.get_xticklabels()[0].set_weight("bold")
 ax1.get_xticklabels()[2].set_weight("bold")
 ax1.set_xlabel("Vertical plate position (% strike zone)",fontweight='bold')
 ax1.set_ylabel("Vertical contact error (% strike zone)",fontweight='bold')
-ax1.set_title("Contact error vs Position in Strike Zone", fontsize=11, fontweight='bold',y=1.02)
-ax1.set_ylim(-.05, .2)
+ax1.set_title("Contact error vs Position in Strike Zone", fontsize=9, fontweight='bold',y=1)
+ax1.set_ylim(-.05, .225)
 ax1.spines['top'].set_visible(True)
 ax1.spines['right'].set_visible(True)
-ax1.legend(loc="upper left",frameon=True, bbox_to_anchor=(-.51,1.05))
+ax1.legend(loc="upper left",frameon=True, bbox_to_anchor=(-.51,1.05),ncol=2)
     
 
 ###########################################
@@ -170,3 +171,6 @@ pval = stats.t.sf(np.abs(t_value), dof)*2
 print("T-value = ", t_value , "; T-critical = ", t_critical, "; P-val = ", pval)
 
 fig.savefig(os.path.join(os.getcwd(),"figures","Figure4-pitchtipping.png"), dpi=300, facecolor='w', edgecolor='w', bbox_inches="tight")
+fig.savefig(os.path.join(os.getcwd(),"figures","Figure4-pitchtipping.svg"))
+
+plt.rcParams.update({'font.sans-serif':'Arial','font.size':10})

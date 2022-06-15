@@ -4,9 +4,6 @@
 #                                                                      #
 ########################################################################
 
-# Helper functions from tutorial on customizing violin plots. 
-# https://matplotlib.org/stable/gallery/statistics/customized_violin.html
-
 def get_color_list(cmap="plasma"):
     these_colors = []
     for row in sns.color_palette(cmap,as_cmap=False,n_colors=len(which_pitches)): #frequent_pitches.index)):
@@ -32,13 +29,19 @@ def set_axis_style(ax, labels):
     
 def my_violinplot(local_data=[],true_shift=[],deviation=[],ax=[],which_pitches=[],bin_locs=[],widths=.1):
     
+    ''' Based on this code: https://matplotlib.org/stable/gallery/statistics/customized_violin.html '''
+
+    local_data = local_data.loc[local_data.pitch_name.isin(which_pitches),:].copy()
+
     # Create new axis if none is provided
     if ax is None:
         ax = plt.gca()
         
     # Convert data into numpy array with different column sizes (http://www.asifr.com/transform-grouped-dataframe-to-numpy.html)
-    xt  = local_data[local_data.pitch_name.isin(which_pitches)].loc[:,[deviation]].values
-    g   = local_data[local_data.pitch_name.isin(which_pitches)].reset_index(drop=True).groupby(true_shift + "_qbinned")
+    # xt  = local_data[local_data.pitch_name.isin(which_pitches)].loc[:,[deviation]].values
+    # g   = local_data[local_data.pitch_name.isin(which_pitches)].reset_index(drop=True).groupby(true_shift + "_qbinned")
+    xt  = local_data.loc[:,[deviation]].values
+    g   = local_data.reset_index(drop=True).groupby(true_shift + "_qbinned")
     xtg = [xt[i.values,:] for k,i in g.groups.items()]
     xout = np.array(xtg,dtype=object)
 
@@ -82,3 +85,16 @@ def run_regression(xx,yy):
     ols = sm.OLS(yy,X)
     ols_result = ols.fit()
     return ols_result
+
+# Calculate time for pitch velo and distance
+def time_for_pitch_velocity_and_distance(velocities=[95],distances=[20, 40, 60]):
+    
+    """ This function uses a VERY basic calculation to compute an estimate of how long it takes for a pitch to reach different positions. 
+    Does not assume slowing down of pitch over time.  A future version will be based on the trajectory calculator by Alan N. Nathan. """
+
+    for velo in velocities:
+        print('It takes a ball thrown {} mph: '.format(velo))
+        for d in distances:
+            t = d / (velo * 1.46667)
+            print("{} ms to go {} feet.".format(round(t,5)*1000,d))
+        print("-----------------------------")
